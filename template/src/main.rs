@@ -4,13 +4,16 @@ mod utils;
 use aoc_client::{AocClient, AocResult};
 use std::{fs, path::Path};
 
+const YEAR: i32 = 2024;
+// TODO: Pick up day automatically from directory instead...
+const DAY: u32 = 1;
 const INPUT_FILE: &str = "./input.txt";
 
 fn get_input_from_aoc() -> AocResult<String> {
     let client = AocClient::builder()
         .session_cookie_from_default_locations()?
-        .year(2023)?
-        .day(1)?
+        .year(YEAR)?
+        .day(DAY)?
         .build()?;
 
     println!("Getting input from AoC site...");
@@ -30,7 +33,6 @@ fn get_input() -> String {
         },
     }
 }
-
 fn main() {
     let input = get_input();
     println!("Input: {}", input);
