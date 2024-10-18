@@ -7,4 +7,9 @@ Use included makefile with:
 `make day=1`  
 This will setup a new template for the day specified. It will also add two empty example files,
 add example inputs to these files(do not commit them to repo...)
-
+## Using the template
+Examples are run as tests, run them through cargo:  
+`cargo test part1` or `cargo test part2`, or run both with `cargo test`  
+To run with the real input, simply use:  
+`cargo run`  
+in the folder of the day you wish to run.
