@@ -12,4 +12,7 @@ Examples are run as tests, run them through cargo:
 `cargo test part1` or `cargo test part2`, or run both with `cargo test`  
 To run with the real input, simply use:  
 `cargo run`  
-in the folder of the day you wish to run.
+in the folder of the day you wish to run.  
+
+
+Please note that the code assumes that the directory it runs in, is named `day1`, `day2` etc. Otherwise it will not be able to collect which day you are trying to run.
