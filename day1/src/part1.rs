@@ -3,7 +3,7 @@ fn parse(lines: Vec<&str>) -> (Vec<usize>, Vec<usize>) {
     let mut first_col = vec![];
     let mut second_col = vec![];
     for line in lines {
-        let mut iter = line.split(" ");
+        let mut iter = line.split_whitespace();
         first_col.push(
             iter.next()
                 .expect("No first value in input row")
@@ -11,7 +11,7 @@ fn parse(lines: Vec<&str>) -> (Vec<usize>, Vec<usize>) {
                 .expect("First value was not a number"),
         );
         second_col.push(
-            iter.find(|x| !x.is_empty())
+            iter.next()
                 .expect("No second value in input row")
                 .parse::<usize>()
                 .expect("Second value was not a number"),

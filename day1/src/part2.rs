@@ -5,7 +5,7 @@ fn parse(lines: Vec<&str>) -> (Vec<usize>, HashMap<usize, usize>) {
     let mut first_col = vec![];
     let mut second_col = HashMap::new();
     for line in lines {
-        let mut iter = line.split(" ");
+        let mut iter = line.split_whitespace();
         first_col.push(
             iter.next()
                 .expect("No first value in input row")
@@ -13,7 +13,7 @@ fn parse(lines: Vec<&str>) -> (Vec<usize>, HashMap<usize, usize>) {
                 .expect("First value was not a number"),
         );
         let val = iter
-            .find(|x| !x.is_empty())
+            .next()
             .expect("No second value in input row")
             .parse::<usize>()
             .expect("Second value was not a number");
