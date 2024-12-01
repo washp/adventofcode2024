@@ -27,12 +27,10 @@ pub fn run(input: &str) -> usize {
     let lines = input.lines().collect::<Vec<_>>();
     let (col1, col2) = parse(lines);
     let mut sum = 0;
-    let sum_dist = col1
-        .iter()
-        .zip(col2)
-        .map(|(val1, val2)| (*val1 as isize - val2 as isize).unsigned_abs())
-        .sum::<usize>();
-    sum_dist
+    for val in col1 {
+        sum += val * col2.iter().filter(|x| &&val == x).count();
+    }
+    sum
 }
 
 #[cfg(test)]
