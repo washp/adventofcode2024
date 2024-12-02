@@ -4,7 +4,7 @@ mod utils;
 use aoc_client::{AocClient, AocResult};
 use std::{env, fs, path::Path};
 
-const YEAR: i32 = 2023;
+const YEAR: i32 = 2024;
 const INPUT_FILE: &str = "./input.txt";
 
 fn get_input_from_aoc(day: &usize) -> AocResult<String> {

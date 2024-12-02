@@ -16,7 +16,7 @@ mod tests {
     use std::fs;
 
     #[test]
-    fn test_part1() {
+    fn test_part2() {
         let example_content = fs::read_to_string("example_input2.txt").unwrap();
         assert_eq!(run(&example_content), 10);
     }
