@@ -40,16 +40,19 @@ fn get_input(day: &usize) -> String {
 
 fn get_day() -> usize {
     let cur_path = env::current_dir();
-    if let Ok(path) = cur_path {
-        if let Some(dir_name) = path.as_path().iter().last() {
-            if let Some(day) = dir_name.to_str().unwrap().split("day").last() {
-                return day.parse::<usize>().unwrap();
-            }
-        }
-    }
-    panic!(
-        "Failed to figure out day number, please verify that you are running in a correct directory, ie 'day2'"
-    );
+    cur_path
+        .expect("Failed to read current path!")
+        .as_path()
+        .iter()
+        .last()
+        .expect("Failed to get last element of path!")
+        .to_str()
+        .unwrap()
+        .split("day")
+        .last()
+        .expect("Could not split directory name on 'day', please make sure directory name follows correct format!")
+        .parse::<usize>()
+        .expect("Could not convert day number to uint!")
 }
 
 fn main() {
