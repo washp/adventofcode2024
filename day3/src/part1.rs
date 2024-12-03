@@ -2,17 +2,13 @@
 fn parse(lines: Vec<&str>) -> Vec<(usize, usize)> {
     let mut multiplications: Vec<(usize, usize)> = vec![];
     for line in lines {
-        let mut iter = line.split("mul").peekable();
-        if iter.peek() != Some(&"mul") {
+        let mut iter = line.split("mul(").peekable();
+        if iter.peek() != Some(&"mul(") {
             iter.next();
         }
         let potential_mul: Vec<(usize, usize)> = iter
-            .filter(|x| x.starts_with('('))
             .map(|x| {
-                let mut c = x.chars();
-                c.next();
-                c.as_str()
-                    .split(")")
+                x.split(")")
                     .next()
                     .expect("No first value")
                     .split(",")
