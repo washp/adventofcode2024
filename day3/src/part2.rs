@@ -23,15 +23,26 @@ fn parse(lines: Vec<&str>) -> Vec<(usize, usize)> {
                 )
             })
             .collect();
-        multiplications.extend(potential_mul)
+        multiplications.extend(potential_mul);
     }
     multiplications
 }
 
+fn parse_segments(input: &str) -> Vec<&str> {
+    input
+        .split("do()")
+        .map(|x| {
+            x.split("don't()")
+                .next()
+                .expect("No beginning of string... odd")
+        })
+        .collect::<Vec<&str>>()
+}
+
 #[allow(unused_variables)]
 pub fn run(input: &str) -> usize {
-    let lines = input.lines().collect::<Vec<_>>();
-    let mul = parse(lines);
+    let segments = parse_segments(input);
+    let mul = parse(segments);
     let mut sum = 0;
     for pair in mul {
         sum += pair.0 * pair.1;
