@@ -8,10 +8,7 @@ fn parse(lines: Vec<&str>) -> Vec<Vec<char>> {
 }
 
 fn in_bounds(pos: &Coord, size: (usize, usize)) -> bool {
-    if pos.x <= 0 || pos.x + 1 >= size.0 as isize || pos.y <= 0 || pos.y + 1 >= size.1 as isize {
-        return false;
-    }
-    true
+    pos.x > 0 && pos.x + 1 < size.0 as isize && pos.y > 0 && pos.y + 1 < size.1 as isize
 }
 
 fn find_xmas(pos: Coord, map: &[Vec<char>]) -> bool {
