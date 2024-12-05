@@ -23,16 +23,15 @@ fn parse(lines: Vec<&str>) -> (Vec<(usize, usize)>, Vec<Vec<usize>>) {
     (rules, values)
 }
 
-fn fix_row(row: Vec<usize>, rules: &Vec<(usize, usize)>) -> usize {
-    let mut new_row = row.clone();
+fn fix_row(mut row: Vec<usize>, rules: &Vec<(usize, usize)>) -> usize {
     let mut correct = false;
     'outer: while !correct {
         for rule in rules {
-            if let Some(low_i) = new_row.iter().position(|&x| x == rule.0) {
-                if let Some(high_i) = new_row.iter().position(|&x| x == rule.1) {
+            if let Some(low_i) = row.iter().position(|&x| x == rule.0) {
+                if let Some(high_i) = row.iter().position(|&x| x == rule.1) {
                     if low_i > high_i {
-                        let low_val = new_row.remove(low_i);
-                        new_row.insert(high_i, low_val);
+                        let low_val = row.remove(low_i);
+                        row.insert(high_i, low_val);
                         continue 'outer;
                     }
                 }
@@ -40,8 +39,7 @@ fn fix_row(row: Vec<usize>, rules: &Vec<(usize, usize)>) -> usize {
         }
         correct = true;
     }
-    println!("{:?}", new_row);
-    new_row[new_row.len() / 2]
+    row[row.len() / 2]
 }
 
 fn check_rules(rules: &Vec<(usize, usize)>, mut values: Vec<Vec<usize>>) -> usize {
@@ -51,7 +49,7 @@ fn check_rules(rules: &Vec<(usize, usize)>, mut values: Vec<Vec<usize>>) -> usiz
             if let Some(low_i) = row.iter().position(|&x| x == rule.0) {
                 if let Some(high_i) = row.iter().position(|&x| x == rule.1) {
                     if low_i > high_i {
-                        correct_sum += fix_row(row.to_vec(), rules);
+                        correct_sum += fix_row(row.clone(), rules);
                         continue 'outer;
                     }
                 }
