@@ -30,7 +30,6 @@ fn parse(lines: Vec<&str>) -> ParseResult {
 }
 
 fn is_on_map(pos: &Coord, (width, height): &(usize, usize)) -> bool {
-    println!("{:?} < {:?}", pos.y, height);
     pos.x >= 0 && pos.x < *width as isize && pos.y >= 0 && pos.y < *height as isize
 }
 
