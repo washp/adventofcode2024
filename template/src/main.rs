@@ -2,7 +2,7 @@ mod part1;
 mod part2;
 mod utils;
 use aoc_client::{AocClient, AocResult};
-use std::{env, fs, path::Path};
+use std::{env, fs, path::Path, time::Instant};
 
 const YEAR: i32 = 2024;
 const INPUT_FILE: &str = "./input.txt";
@@ -58,9 +58,11 @@ fn get_day() -> usize {
 fn main() {
     let input = get_input(&get_day());
     println!("Processing part1...");
+    let part1_timer = Instant::now();
     let part1_result = part1::run(&input);
+    println!("Part1: {} ({:?})", part1_result, part1_timer.elapsed());
     println!("Processing part2...");
+    let part2_timer = Instant::now();
     let part2_result = part2::run(&input);
-    println!("Part1: {}", part1_result);
-    println!("Part2: {}", part2_result);
+    println!("Part2: {} ({:?})", part2_result, part2_timer.elapsed());
 }
