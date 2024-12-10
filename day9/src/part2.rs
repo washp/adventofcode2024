@@ -45,49 +45,39 @@ fn calculate_checksum(segments: Vec<Segment>) -> usize {
 }
 
 fn defrag(mut segments: Vec<Segment>) -> Vec<Segment> {
-    for segment_to_move in segments.clone().into_iter().rev() {
-        if segment_to_move.id.is_none() {
+    for i_seg in (0..segments.len()).rev() {
+        let segment = segments.remove(i_seg);
+        let mut found_void = false;
+        if segment.id.is_none() {
+            segments.insert(i_seg, segment);
             continue;
         }
-        for a in 0..segments.len() {
-            let index = segments
-                .clone()
-                .iter()
-                .position(|x| x.id == segment_to_move.id)
-                .expect("Item not here?");
-            if index <= a {
+        for i_void in 0..i_seg {
+            let void = segments
+                .get_mut(i_void)
+                .expect("No value at index, weird...");
+            if void.id.is_some() {
                 continue;
             }
-            if let Some(segment) = segments.get_mut(a) {
-                if segment.id.is_none() {
-                    if segment.length == segment_to_move.length {
-                        segments.remove(index);
-                        segments.insert(
-                            index,
-                            Segment {
-                                id: None,
-                                length: segment_to_move.length,
-                            },
-                        );
-                        segments.remove(a);
-                        segments.insert(a, segment_to_move);
-                    } else if segment.length > segment_to_move.length {
-                        segment.length -= segment_to_move.length;
-                        segments.remove(index);
-                        segments.insert(
-                            index,
-                            Segment {
-                                id: None,
-                                length: segment_to_move.length,
-                            },
-                        );
-                        segments.insert(a, segment_to_move);
-                    }
-                }
+            if void.length >= segment.length {
+                void.length -= segment.length;
+                segments.insert(i_void, segment);
+                segments.insert(
+                    i_seg,
+                    Segment {
+                        id: None,
+                        length: segment.length,
+                    },
+                );
+                found_void = true;
+                break;
             }
         }
+        if !found_void {
+            segments.insert(i_seg, segment);
+        }
     }
-    segments
+    segments.iter().filter(|x| x.length > 0).cloned().collect()
 }
 
 #[allow(unused_variables)]
