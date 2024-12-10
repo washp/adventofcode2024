@@ -30,6 +30,7 @@ fn parse(line: &str) -> Vec<Segment> {
     segments
 }
 
+#[allow(clippy::mut_range_bound)]
 fn calculate_checksum(segments: Vec<Segment>) -> usize {
     let mut last_i = 0;
     let mut sum = 0;

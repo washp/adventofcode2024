@@ -30,6 +30,7 @@ fn parse(line: &str) -> Vec<Segment> {
     segments
 }
 
+#[allow(clippy::mut_range_bound)]
 fn calculate_checksum(segments: Vec<Segment>) -> usize {
     let mut last_i = 0;
     let mut sum = 0;
@@ -52,16 +53,20 @@ fn defrag(mut segments: Vec<Segment>) -> Vec<Segment> {
         }
         if let Some(segment) = segments.get_mut(i) {
             if segment.id.is_none() {
-                if segment.length > last.length {
-                    segment.length -= last.length;
-                    segments.insert(i, last);
-                } else if segment.length == last.length {
-                    segments.remove(i);
-                    segments.insert(i, last);
-                } else {
-                    last.length -= segment.length;
-                    segment.id = last.id;
-                    segments.push(last);
+                match segment.length {
+                    value if value > last.length => {
+                        segment.length -= last.length;
+                        segments.insert(i, last);
+                    }
+                    value if value == last.length => {
+                        segments.remove(i);
+                        segments.insert(i, last);
+                    }
+                    _ => {
+                        last.length -= segment.length;
+                        segment.id = last.id;
+                        segments.push(last);
+                    }
                 }
             } else {
                 segments.push(last);
