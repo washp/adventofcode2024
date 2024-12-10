@@ -1,4 +1,4 @@
-use std::collections::{HashMap, VecDeque};
+use std::collections::{HashMap, HashSet, VecDeque};
 
 use crate::utils::Vector2D;
 
@@ -40,7 +40,7 @@ fn get_possible_steps(cur_pos: &Coord, map: &Map) -> Vec<Coord> {
     })
 }
 
-fn find_trails(map: Map, start: Vec<Coord>) {
+fn find_trails(map: Map, start: Vec<Coord>) -> usize {
     let mut pos_paths: VecDeque<Vec<Coord>> = start.iter().map(|x| vec![*x]).collect();
     let mut trails = Vec::new();
     while let Some(path) = pos_paths.pop_front() {
@@ -56,17 +56,21 @@ fn find_trails(map: Map, start: Vec<Coord>) {
             }
         }
     }
-    for trail in trails {
-        println!("{:?}", trail);
+    let mut unique = HashSet::new();
+    for trail in trails.into_iter() {
+        unique.insert((
+            *trail.first().expect("No first coord on trail"),
+            *trail.last().expect("No last coord on trail"),
+        ));
     }
+    unique.len()
 }
 
 #[allow(unused_variables)]
 pub fn run(input: &str) -> usize {
     let lines = input.lines().collect::<Vec<_>>();
     let (map, start) = parse(lines);
-    find_trails(map, start);
-    0
+    find_trails(map, start)
 }
 
 #[cfg(test)]
