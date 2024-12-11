@@ -1,0 +1,49 @@
+#[allow(unused_variables)]
+fn parse(line: &str) -> Vec<usize> {
+    line.split_whitespace()
+        .map(|x| x.parse::<usize>().expect("Value not a number"))
+        .collect()
+}
+
+fn blink(mut stones: Vec<usize>) -> Vec<usize> {
+    let mut extra_stones = 0;
+    for i in 0..stones.len() {
+        let stone = stones.remove(i + extra_stones);
+        match stone {
+            0 => {
+                stones.insert(i, 1);
+            }
+            value if (value.ilog10() + 1) % 2 == 0 => {
+                let split_digits = (value.ilog10() + 1) / 2;
+                let upper = value / 10usize.pow(split_digits);
+                let lower = value - upper * 10usize.pow(split_digits);
+                stones.insert(i, upper);
+                stones.insert(i + 1, lower);
+                extra_stones += 1;
+            }
+            value => stones.insert(i, value * 2024),
+        }
+    }
+    stones
+}
+
+#[allow(unused_variables)]
+pub fn run(input: &str) -> usize {
+    let mut stones = parse(input.trim());
+    for i in 0..25 {
+        stones = blink(stones);
+    }
+    stones.len()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::run;
+    use std::fs;
+
+    #[test]
+    fn test_part1() {
+        let example_content = fs::read_to_string("example_input2.txt").unwrap();
+        assert_eq!(run(&example_content), 55312);
+    }
+}
