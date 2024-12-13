@@ -26,5 +26,4 @@ Cargo.lock
 
 # AoC specific
 **/input.txt
-**/example_input1.txt
-**/example_input2.txt
+**/example_input*.txt
