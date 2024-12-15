@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+
 use std::ops::{Add, Sub};
 
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
@@ -24,6 +25,17 @@ impl<T: std::ops::Sub<Output = T>> Sub for Vector2D<T> {
             x: self.x - other.x,
             y: self.y - other.y,
         }
+    }
+}
+
+impl<T> Vector2D<T>
+where
+    T: From<u32> + Into<i64>,
+{
+    pub fn length(self) -> T {
+        T::from(
+            (f64::sqrt((i64::pow(self.x.into(), 2) + i64::pow(self.y.into(), 2)) as f64)) as u32,
+        )
     }
 }
 
