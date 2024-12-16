@@ -62,31 +62,33 @@ pub fn run(input: &str) -> u64 {
     let lines = input.lines().filter(|x| !x.is_empty()).collect::<Vec<_>>();
     let machines = parse(lines);
     let mut wins = Vec::new();
+    let target_add: u64 = 10000000000000;
     for machine in machines {
         let a: Array2<f64> = array![
             [machine.btn_a.x as f64, machine.btn_b.x as f64],
             [machine.btn_a.y as f64, machine.btn_b.y as f64]
         ];
-        let b: Array1<f64> = array![machine.target.x as f64, machine.target.y as f64];
+        let b: Array1<f64> = array![
+            (machine.target.x + target_add) as f64,
+            (machine.target.y + target_add) as f64
+        ];
         let x = a.solve_into(b);
+        let margin = 1000;
         if let Ok(values) = x {
-            let mut num_x = (values[0] * 1000.).round() as u64;
-            num_x = match num_x % 1000 {
-                0 => num_x / 1000,
+            let mut num_x = (values[0] * margin as f64).round() as u64;
+            num_x = match num_x % margin {
+                0 => num_x / margin,
                 _ => 0,
             };
-            let mut num_y = (values[1] * 1000.).round() as u64;
-            num_y = match num_y % 1000 {
-                0 => num_y / 1000,
+            let mut num_y = (values[1] * margin as f64).round() as u64;
+            num_y = match num_y % margin {
+                0 => num_y / margin,
                 _ => 0,
             };
 
             let tokens = num_x * 3 + num_y;
-            if num_x < 100 && num_y < 100 {
-                let tokens = num_x * 3 + num_y;
+            if num_x > 0 && num_y > 0 {
                 wins.push(num_x * 3 + num_y)
-            } else {
-                wins.push(0);
             }
         }
     }
@@ -98,12 +100,14 @@ mod tests {
     use super::run;
     use std::fs;
 
+    #[ignore]
     #[test]
     fn test_part1() {
         let example_content = fs::read_to_string("example_input1.txt").unwrap();
         assert_eq!(run(&example_content), 480);
     }
 
+    #[ignore]
     #[test]
     fn test_test() {
         let example_content = fs::read_to_string("example_input3.txt").unwrap();
@@ -112,6 +116,6 @@ mod tests {
     #[test]
     fn test_test2() {
         let example_content = fs::read_to_string("example_input4.txt").unwrap();
-        assert_eq!(run(&example_content), 134);
+        assert_eq!(run(&example_content), 0);
     }
 }
