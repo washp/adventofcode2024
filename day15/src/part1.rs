@@ -12,10 +12,24 @@ struct Map {
 
 #[allow(unused_variables)]
 fn parse(lines: Vec<&str>) {
+    let mut map = Map {
+        boxes: HashSet::new(),
+        walls: HashSet::new(),
+        robot: Coord::new(0, 0),
+    };
     let mut iter = lines.iter();
-    for line in iter.by_ref() {
+    for (y, line) in iter.by_ref().enumerate() {
         if line.trim().is_empty() {
             break;
+        }
+        for (x, char) in line.chars().enumerate() {
+            let pos = Coord::new(x as i32, y as i32);
+            match char {
+                '@' => map.robot = pos,
+                '#' => _ = map.walls.insert(pos),
+                'O' => _ = map.boxes.insert(pos),
+                _ => (),
+            }
         }
     }
     for line in iter {
