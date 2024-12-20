@@ -80,7 +80,6 @@ fn get_box_pos(pos: &Coord, boxes: &HashSet<Coord>) -> Result<Coord, ()> {
     Err(())
 }
 
-// TODO: add helper functions for boxes
 fn move_item(pos: &Coord, dir: Coord, map: &mut Map, dry_run: bool) -> Result<(), ()> {
     if map.walls.contains(pos) {
         return Err(());
@@ -96,7 +95,7 @@ fn move_item(pos: &Coord, dir: Coord, map: &mut Map, dry_run: bool) -> Result<()
     let mut new_box_res = get_box_pos(&new_pos, &map.boxes);
     let mut second_box: Result<Coord, ()> = Err(());
     if is_box && (dir == NORTH || dir == SOUTH) {
-        if map.walls.contains(&(new_pos + EAST)) {
+        if map.walls.contains(&new_pos) || map.walls.contains(&(new_pos + EAST)) {
             return Err(());
         }
         if new_box_res.is_err() {
@@ -167,12 +166,7 @@ pub fn run(input: &str) -> i32 {
     let (mut map, dirs, size) = parse(lines);
     println!("dirs: {}", dirs.len());
     for (i, dir) in dirs.iter().enumerate() {
-        if i > 9157 && i < 9165 {
-            draw_map(&map, dir, size);
-        }
-        draw_map(&map, dir, size);
         let res = move_item(&(map.robot.clone()), *dir, &mut map, false);
-        //println!("{}", map.boxes.iter().map(|x| x.y * 100 + x.x).sum::<i32>());
     }
     draw_map(&map, &Coord::new(0, 0), size);
     map.boxes.iter().map(|x| x.y * 100 + x.x).sum()
