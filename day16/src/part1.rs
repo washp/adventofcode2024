@@ -38,6 +38,7 @@ fn parse(lines: Vec<&str>) -> (Paths, (Coord, Coord)) {
     (paths, (start, goal))
 }
 
+#[allow(dead_code)]
 fn draw(paths: &Paths, trail: &HashSet<Coord>) {
     for y in 0..15 {
         for x in 0..15 {
