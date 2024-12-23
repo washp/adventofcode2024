@@ -114,7 +114,6 @@ fn parse(lines: Vec<&str>) -> (State, Vec<(CmdFunc, u64)>, Vec<u64>) {
 pub fn run(input: &str) -> u64 {
     let lines = input.lines().collect::<Vec<_>>();
     let (org_state, program, expected) = parse(lines);
-    let mut a_start = 0;
     let mut rev_exp: Vec<u64> = Vec::new();
     let mut new_res_list: Vec<u64> = vec![0];
     for exp in expected.iter().rev() {
@@ -124,7 +123,7 @@ pub fn run(input: &str) -> u64 {
         for res in res_list {
             for i in 0..8 {
                 let mut state = org_state.clone();
-                a_start = res + i;
+                let a_start = res + i;
 
                 state.a = a_start;
                 while let Some(cmd) = program.get(state.inst_point as usize) {
