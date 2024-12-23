@@ -63,6 +63,6 @@ fn main() {
     println!("Part1: {} ({:?})", part1_result, part1_timer.elapsed());
     println!("Processing part2...");
     let part2_timer = Instant::now();
-    let part2_result = part2::run(&input);
+    let part2_result = part2::run(&input, 70);
     println!("Part2: {} ({:?})", part2_result, part2_timer.elapsed());
 }
