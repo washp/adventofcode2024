@@ -139,43 +139,19 @@ fn walk(
     sum
 }
 
-fn get_diamond() -> Vec<Coord> {
-    let mut positions = Vec::new();
-    for x in -20..21i32 {
-        for y in 0..(21 - x.abs()) {
-            positions.push(Coord::new(x, y));
-            positions.push(Coord::new(x, -y));
-        }
-    }
-    positions
-}
-
-fn is_in_map(pos: &Coord, map: &Map) -> bool {
-    if pos.x < 0 || pos.x >= map.size.0 || pos.y < 0 || pos.y >= map.size.1 {
-        return false;
-    }
-    true
-}
-
-fn find_cheats(path: HashMap<Coord, i32>, map: &Map, threshold: i32) -> Vec<i32> {
+fn find_cheats(path: &[Coord], threshold: i32) -> Vec<i32> {
     let mut cheats = Vec::new();
-    let diamond = get_diamond();
-    for (pos, value) in path.iter() {
-        for diamond_pos in diamond.iter() {
-            let new_pos = *pos + *diamond_pos;
-            if !is_in_map(&new_pos, map) {
-                continue;
-            }
-            if let Some(new_value) = path.get(&new_pos) {
-                if new_value < value {
-                    continue;
+    for (i, pos) in path.iter().enumerate() {
+        for a in (i + 3)..path.len() {
+            if let Some(new_pos) = path.get(a) {
+                let diff = *new_pos - *pos;
+                let dist = diff.x.abs() + diff.y.abs();
+                if dist <= 20 {
+                    let gain = a as i32 - i as i32 - dist;
+                    if gain >= threshold {
+                        cheats.push(gain);
+                    }
                 }
-                let score = new_value - value - (diamond_pos.x.abs() + diamond_pos.y.abs());
-                if score >= threshold {
-                    cheats.push(score);
-                }
-            } else {
-                continue;
             }
         }
     }
@@ -193,7 +169,7 @@ pub fn run(input: &str) -> usize {
     for (i, pos) in result[0].clone().into_iter().rev().enumerate() {
         cache.insert(pos, i as i32);
     }
-    let cheats = find_cheats(cache, &map, 100);
+    let cheats = find_cheats(&result[0], 100);
     cheats.len()
 }
 
