@@ -50,14 +50,14 @@ fn parse(lines: Vec<&str>) -> Map {
     }
 }
 
-fn successors(pos: &Coord, walls: &HashSet<Coord>, size: Size, can_cheat: bool) -> Vec<Coord> {
+fn successors(pos: &Coord, walls: &HashSet<Coord>, size: Size) -> Vec<Coord> {
     let mut successors: Vec<Coord> = Vec::new();
     for dir in [NORTH, EAST, SOUTH, WEST] {
         let new_pos = *pos + dir;
         if new_pos.x < 0 || new_pos.x > size.0 || new_pos.y < 0 || new_pos.y > size.1 {
             continue;
         }
-        if walls.contains(&new_pos) && !can_cheat {
+        if walls.contains(&new_pos) {
             continue;
         }
         successors.push(new_pos);
@@ -88,22 +88,8 @@ fn walk(
     map: &Map,
     mut visited: Vec<Coord>,
     result: &mut Vec<Vec<Coord>>,
-    can_cheat: bool,
     threshold: i32,
-    cache: &Option<HashMap<Coord, i32>>,
 ) -> i32 {
-    if !can_cheat {
-        if let Some(cache_val) = cache {
-            if let Some(value) = cache_val.get(pos) {
-                let length = visited.len() as i32 - 1 + *value;
-                if threshold >= length {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
-        }
-    }
     if visited.contains(pos) || (threshold < visited.len() as i32 && threshold > 0) {
         return 0;
     }
@@ -113,28 +99,8 @@ fn walk(
         return 1;
     }
     let mut sum = 0;
-    for new_pos in successors(pos, &map.walls, map.size, can_cheat) {
-        if map.walls.contains(&new_pos) {
-            sum += walk(
-                &new_pos,
-                map,
-                visited.clone(),
-                result,
-                false,
-                threshold,
-                cache,
-            );
-        } else {
-            sum += walk(
-                &new_pos,
-                map,
-                visited.clone(),
-                result,
-                can_cheat,
-                threshold,
-                cache,
-            );
-        }
+    for new_pos in successors(pos, &map.walls, map.size) {
+        sum += walk(&new_pos, map, visited.clone(), result, threshold);
     }
     sum
 }
@@ -163,7 +129,7 @@ pub fn run(input: &str) -> usize {
     let lines = input.lines().collect::<Vec<_>>();
     let map = parse(lines);
     let mut result = Vec::new();
-    walk(&map.start, &map, Vec::new(), &mut result, false, -1, &None);
+    walk(&map.start, &map, Vec::new(), &mut result, -1);
     let full_race = (result[0].len() - 1) as i32;
     let mut cache: HashMap<Coord, i32> = HashMap::new();
     for (i, pos) in result[0].clone().into_iter().rev().enumerate() {
